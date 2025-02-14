@@ -5,14 +5,29 @@ const userSchema = new Schema(
   {
     email: {
       type: String,
-      required: [true, 'Email is required.'],
+      //required: [true, 'Email is required.'],
       unique: true,
       lowercase: true,
       trim: true
     },
     password: {
       type: String,
-      required: [true, 'Password is required.']
+      //required: [true, 'Password is required.']
+    },
+    rents: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Rents"
+      }
+    ],
+    role: {
+      type: String,
+      enum: ["USER", "ADMIN"],
+      default: "USER"
+    },
+    friends: {
+      type: [ Schema.Types.ObjectId], 
+      ref: "User"
     }
   },
   {
