@@ -62,6 +62,41 @@ router.post("/signup", async(req, res, next) => {
 })
 
 //POST "/api/auth/login" => autenticación del usuario y envio del token
+router.post('/login', async (req, res, next) => {
+
+  const { email, password } = req.body
+
+  // los campos obligatorios
+  if (!email || !password){
+    res.status(400).json({errorMessage: "Correo electronico y contraseña son campos obligatorios"})
+    return // detener la ejecución de la ruta
+  }
+ try {
+
+   // verificar que el usuario existe en la DB
+  const findUser = await User.findOne({email: email})
+  if (findUser === null){
+    res.status(400).json({errorMessage: 'usuario no encontrado con ese correo electronico'})
+    return
+  }
+
+  // verificar que la contraseña es correcta
+  const isPasswordCorrect = await bcryptjs.compare(password, findUser.password)
+  if(isPasswordCorrect === false) {
+    res.status(400).json({errorMessage: "La contraseña es incorrecta melón!"})
+    return // detener la ejecución de la ruta
+  }
+
+  // HASTA AQUI YA HEMOS AUTENTICADO EL USUARIO🎉
+  
+  res.send("todo bien")
+ } catch (e) {
+  next(e)
+ }
+ 
+  
+  
+})
 
 //GET "/api/auth/verify" => validación del token
 
