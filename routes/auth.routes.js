@@ -1,5 +1,8 @@
 const router = require("express").Router();
+
 const User = require("../models/User.model.js");
+const bcryptjs = require("bcryptjs")
+
 //POST "/api/auth/signup" => registra el usuario
 router.post("/signup", async(req, res, next) => {
 
@@ -42,10 +45,14 @@ router.post("/signup", async(req, res, next) => {
       res.status(400).json('Ya existe un usuario con este correo')
       return
     }
+
+    //cifrar constraseña
+    const constraseñaCifrada = await bcryptjs.hash(password, 12)
+
     await User.create({
      name : name,
      email : email,
-     password : email
+     password : constraseñaCifrada
     })
    res.status(201).json('usuario creado ✅')
    
