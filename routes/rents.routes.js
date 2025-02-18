@@ -4,25 +4,41 @@ const Rents = require("../models/Rent.model.js");
 // GET => /api/rents/all   
 //! OBTENER TODOS LOS RENTS 
 router.get("/all", async (req, res, next) => {
-  const allRents = await Rents.find()
-    res.json(allRents);
+  try {
+    const allRents = await Rents.find()
+      res.status(200).json(allRents);
+  } catch (e) {
+    next(e);
+  }
 });
 
 // GET => api/rents/own/all
 //!OBTENER LOS RENTS DEL USUARIO LOGUEADO (PAYLOAD)
 router.get("/own/all", async (req, res, next) => {
-  const { _id } = req.payload
-  const allRents = await Rents.find({owner: _id})
-    res.json(allRents);
+  try {
+    const { _id } = req.payload
+    const allRents = await Rents.find({owner: _id})
+      res.status(200).json(allRents);
+  } catch (e) {
+    next(e);
+  }
 });
 
-// GET => /api/rents/user/:userId
+// GET => /api/rents/:userId
 //! OBTENER TODOS LOS RENTS DE UN USUARIO 
-
+router.get("/:userId", async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const allRents = await Rents.find({owner: userId})
+      res.status(200).json(allRents);
+  } catch (e) {
+    next(e);
+  }
+});
 
 // GET => /api/rents/own/favorites
 //! OBTENER TODOS LOS RENTS FAVORITOS DEL USUARIO LOGUEADO (PAYLOAD)
-
+//? ¿ruta de usuario?
 
 // PATCH => /api/rents/:rentId/edit
 //! EDITAR UN RENT
